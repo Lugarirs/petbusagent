@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, date
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form
@@ -8,7 +9,15 @@ from .models import Trip, DropPoint, RestStop, Booking
 from .rules import check_pet_documents, pet_price, refund_pct
 
 engine = create_engine("sqlite:///petbus.db", connect_args={"check_same_thread": False})
-app = FastAPI(title="PetBus API", version="0.2.0")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    startup()
+    yield
+
+
+app = FastAPI(title="PetBus API", version="0.2.0", lifespan=lifespan)
 
 
 def get_session():
@@ -16,7 +25,6 @@ def get_session():
         yield s
 
 
-@app.on_event("startup")
 def startup():
     SQLModel.metadata.create_all(engine)
     with Session(engine) as s:
