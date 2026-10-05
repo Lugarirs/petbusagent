@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from typing import Optional
+from pydantic import NaiveDatetime
 from sqlmodel import SQLModel, Field
 
 
@@ -8,7 +9,7 @@ class Trip(SQLModel, table=True):
     route: str
     origin: str
     destination: str
-    departure: datetime
+    departure: NaiveDatetime
     price: float
     total_seats: int = 30
     pet_seats: int = 4
@@ -52,5 +53,5 @@ class Booking(SQLModel, table=True):
     amount: float = 0
     status: str = "confirmed"  # confirmed | waitlisted | cancelled
     refund_amount: float = 0
-    cancelled_at: Optional[datetime] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    cancelled_at: Optional[NaiveDatetime] = None
+    created_at: NaiveDatetime = Field(default_factory=datetime.utcnow)
