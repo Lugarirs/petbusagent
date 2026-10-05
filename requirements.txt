@@ -1,1 +1,7 @@
 fastapi
+uvicorn[standard]
+sqlmodel
+streamlit
+requests
+python-multipart
+google-adk
